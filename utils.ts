@@ -10,29 +10,43 @@ export const nodeChainTransformer = (
   edges: Edge[],
   targetNodeId: string
 ): IMessages[] => {
-  const chain = []
-  let currentNode = nodes.find((node) => node.id === targetNodeId)
-  while (currentNode) {
-    const id = currentNode.id
-    const { question, answer } = currentNode.data
-    if (answer !== undefined) {
-      chain.push({
-        content: answer,
-        role: "assistant" as ChatCompletionRequestMessage["role"],
-      })
+  const chain: IMessages[] = []
+  const incomingEdges = edges.reduce((map, edge) => {
+    if (!map.has(edge.target)) {
+      map.set(edge.target, [])
     }
-    if (question !== undefined) {
-      chain.push({
-        content: question,
-        role: "user" as ChatCompletionRequestMessage["role"],
-      })
+    map.get(edge.target).push(edge)
+    return map
+  }, new Map())
+  let currentNodes = [nodes.find((node) => node.id === targetNodeId)]
+  while (currentNodes.length > 0) {
+    const nextNodes = []
+    for (const currentNode of currentNodes) {
+      const id = currentNode?.id
+      const { question, answer } = currentNode?.data ?? {}
+      if (answer !== undefined) {
+        chain.push({
+          content: answer,
+          role: "assistant",
+        })
+      }
+      if (question !== undefined) {
+        chain.push({
+          content: question,
+          role: "user",
+        })
+      }
+      const incoming = incomingEdges.get(currentNode?.id)
+      if (incoming) {
+        for (const edge of incoming) {
+          const sourceNode = nodes.find((node) => node.id === edge.source)
+          if (sourceNode) {
+            nextNodes.push(sourceNode)
+          }
+        }
+      }
     }
-    const edge = edges.find((edge) => edge.target === currentNode?.id)
-    if (edge) {
-      currentNode = nodes.find((node) => node.id === edge.source)
-    } else {
-      currentNode = undefined
-    }
+    currentNodes = nextNodes
   }
   return chain.reverse()
 }
