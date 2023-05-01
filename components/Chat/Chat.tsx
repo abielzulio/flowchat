@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import {
   Handle,
   Node,
@@ -70,13 +70,14 @@ const Chat = ({
 
       if (!node) return
 
-      const x = node.position.x + node.width! / 2
-      const y = node.position.y + node.height!
-      const zoom = 1.85
-
-      appInstance.setCenter(x, y, { zoom, duration: 1000 })
+      /* TODO: Centerize when zoom */
+      appInstance.setCenter(node.position.x * 1.35, node.position.y, {
+        zoom: 1.85,
+        duration: 1000,
+      })
     }
-  }, [])
+  }, [appInstance])
+
   const onDeleteNode = useCallback(() => {
     if (!nodeId) return
     const node = allNodes.find((node) => node.id === nodeId)
@@ -97,11 +98,16 @@ const Chat = ({
       ...baseChat,
       id: nanoid(),
       position: {
-        x: 100,
-        y: 0,
+        x: 0,
+        y: 300,
       },
     }
     appInstance.setNodes((nds) => nds.concat(newNode))
+
+    appInstance.setCenter(newNode.position.x, newNode.position.y, {
+      zoom: 1.5,
+      duration: 1000,
+    })
 
     if (selectedNode) {
       appInstance.setEdges((els) =>
