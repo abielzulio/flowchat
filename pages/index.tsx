@@ -39,6 +39,9 @@ export default function Main() {
       setNodes(initialState.nodes)
       setEdges(initialState.edges)
       setViewport({ x, y, zoom })
+      if (initialState.nodes.length === 0) {
+        onCreateNewNode()
+      }
     }
   }, [])
 
