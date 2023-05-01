@@ -11,6 +11,7 @@ import {
 } from "reactflow"
 import { baseChat } from "reactflow.options"
 import { IChat } from "type"
+import { askAI, nodeChainTransformer } from "utils"
 
 const Chat = ({
   data,
@@ -27,18 +28,33 @@ const Chat = ({
 
   const isFirstNode = allNodes[0].id === nodeId
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const onSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault()
+    if (!nodeId) return
+    const messages = nodeChainTransformer(
+      allNodes,
+      appInstance.getEdges(),
+      nodeId
+    )
+    console.log(messages)
+    const answer = await askAI(messages, question)
     if (question === "") return
     appInstance.setNodes((prevNodes) => {
       const newNodes = [...prevNodes]
       const nodeIndex = newNodes.findIndex((node) => node.id === nodeId)
-      newNodes[nodeIndex].data = { ...newNodes[nodeIndex].data, question }
+      newNodes[nodeIndex].data = {
+        ...newNodes[nodeIndex].data,
+        question,
+        answer,
+      }
       return newNodes
     })
   }
 
   const onFocusNode = useCallback(() => {
+    if (!nodeId) return
     if (allNodes.length > 0) {
       const node = allNodes.find((node) => node.id === nodeId)
 
@@ -106,7 +122,7 @@ const Chat = ({
             className="text-[12px] outline-transparent border-[0px] w-full"
           />
         </form>
-        <p className="overflow-scroll px-[12px] pt-[12px]">{data.question}</p>
+        <p className="overflow-scroll px-[12px] pt-[12px]">{data.answer}</p>
       </div>
       <Handle
         type="source"
