@@ -67,6 +67,17 @@ const Chat = ({
       appInstance.setCenter(x, y, { zoom, duration: 1000 })
     }
   }, [])
+  const onDeleteNode = useCallback(() => {
+    if (!nodeId) return
+    const node = allNodes.find((node) => node.id === nodeId)
+    if (!node) return
+    const edges = appInstance.getEdges()
+    const connectedEdges = edges.filter(
+      (edge) => edge.source === nodeId || edge.target === nodeId
+    )
+
+    appInstance.deleteElements({ nodes: [node], edges: connectedEdges })
+  }, [appInstance])
 
   const onCreateNewNode = useCallback(() => {
     if (!nodeId) return
@@ -108,8 +119,8 @@ const Chat = ({
           <button type="button" onClick={() => onCreateNewNode()}>
             add
           </button>
-          <button type="button" onClick={() => onFocusNode()}>
-            focus
+          <button type="button" onClick={() => onDeleteNode()}>
+            <TrashIcon size={12} />
           </button>
         </div>
       </div>
