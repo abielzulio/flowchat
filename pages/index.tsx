@@ -5,6 +5,7 @@ import ReactFlow, {
   Controls,
   Edge,
   Node,
+  Panel,
   ReactFlowInstance,
   addEdge,
   useEdgesState,
@@ -105,6 +106,20 @@ export default function Main() {
         fitViewOptions={fitViewOptions}
         nodeTypes={nodeTypes}
       >
+        <Panel
+          position="top-left"
+          className="text-black bg-white py-[4px] px-[8px] h-fit flex flex-col gap-[5px] text-[12px]"
+        >
+          <p className="font-mono opacity-50">Shortcuts</p>
+          <div className="flex flex-col gap-[10px]">
+            <div className="flex items-center gap-[10px]">
+              <p className="font-medium">Create node</p>
+              <span className="bg-white px-[4px] border-black/10 rounded-lg text-black/50 border-[2px]">
+                n
+              </span>
+            </div>
+          </div>
+        </Panel>
         <Background />
         <Controls />
       </ReactFlow>
