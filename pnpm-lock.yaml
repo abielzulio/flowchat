@@ -16,6 +16,9 @@ dependencies:
   eslint-config-next:
     specifier: 13.0.7
     version: 13.0.7(eslint@8.30.0)(typescript@4.9.4)
+  lucide-react:
+    specifier: ^0.190.0
+    version: 0.190.0(react@18.2.0)
   nanoid:
     specifier: ^4.0.0
     version: 4.0.2
@@ -2070,6 +2073,14 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: false
+
+  /lucide-react@0.190.0(react@18.2.0):
+    resolution: {integrity: sha512-a3usWP+PuTBOL2Py8jduu1CnHm6eF2FJWt4gLqsu3/tDgJKnQ/Q/3iaNveqPXUYVg9Akn8Gp14ydPf23QaOqhw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /merge2@1.4.1:
