@@ -106,6 +106,7 @@ export default function Main() {
         onConnect={onConnect}
         onInit={setAppInstance}
         fitView
+        snapToGrid
         fitViewOptions={fitViewOptions}
         nodeTypes={nodeTypes}
       >
