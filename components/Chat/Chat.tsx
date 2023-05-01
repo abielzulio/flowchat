@@ -12,6 +12,13 @@ import {
 import { baseChat } from "reactflow.options"
 import { IChat } from "type"
 import { askAI, nodeChainTransformer } from "utils"
+import {
+  FocusIcon,
+  GripVerticalIcon,
+  Loader2Icon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react"
 
 const Chat = ({
   data,
@@ -20,6 +27,7 @@ const Chat = ({
   sourcePosition = Position.Bottom,
 }: NodeProps<IChat>) => {
   const [question, setQuestion] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const appInstance = useReactFlow()
   const nodeId = useNodeId()
   const { getState } = useStoreApi()
@@ -33,6 +41,7 @@ const Chat = ({
   ): Promise<void> => {
     e.preventDefault()
     if (!nodeId) return
+    setIsLoading(true)
     const messages = nodeChainTransformer(
       allNodes,
       appInstance.getEdges(),
@@ -51,6 +60,7 @@ const Chat = ({
       }
       return newNodes
     })
+    setIsLoading(false)
   }
 
   const onFocusNode = useCallback(() => {
@@ -113,11 +123,17 @@ const Chat = ({
           isConnectable={isConnectable}
         />
       )}
-      <div className="bg-gray-300 w-full px-[12px] py-[10px] font-mono text-[10px] text-black/50 drag-handle flex items-center justify-between">
+      <div className="bg-gray-300 w-full px-[12px] py-[10px] font-mono text-[10px] drag-handle text-black/50 flex items-center justify-between">
         #{allNodes.findIndex((node) => node.id === nodeId) + 1}
-        <div className="flex gap-[10px] items-center">
+        <div className="flex gap-[10px] items-center nodrag cursor-auto">
+          {isLoading && (
+            <Loader2Icon
+              size={12}
+              className={isLoading ? "animate-spin" : ""}
+            />
+          )}
           <button type="button" onClick={() => onCreateNewNode()}>
-            add
+            <PlusIcon size={12} />
           </button>
           <button type="button" onClick={() => onDeleteNode()}>
             <TrashIcon size={12} />
@@ -125,15 +141,21 @@ const Chat = ({
         </div>
       </div>
       <div className="flex gap-[4px] flex-col w-[300px] h-fit max-h-[300px] bg-white text-black text-[12px] cursor-default">
-        <form onSubmit={onSubmit} className="w-full">
-          <input
-            type="text"
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="What's your question?"
-            className="text-[12px] outline-transparent border-[0px] w-full"
-          />
-        </form>
-        <p className="overflow-scroll px-[12px] pt-[12px]">{data.answer}</p>
+        {data.question?.length === 0 ? (
+          <form onSubmit={onSubmit} className="w-full">
+            <input
+              type="text"
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="What's your question?"
+              className="text-[12px] outline-transparent border-[0px] w-full"
+            />
+          </form>
+        ) : (
+          <p className="p-[12px] pb-[0px] opacity-50">{data.question}</p>
+        )}
+        {data.answer && data.answer.length > 0 && (
+          <p className="overflow-scroll px-[12px] pt-[12px]">{data.answer}</p>
+        )}
       </div>
       <Handle
         type="source"
