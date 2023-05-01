@@ -17,6 +17,7 @@ import "reactflow/dist/style.css"
 
 import { nanoid } from "nanoid"
 import { baseChat, fitViewOptions, nodeTypes } from "reactflow.options"
+import Head from "components/Head"
 
 export default function Main() {
   const [appInstance, setAppInstance] = useState<ReactFlowInstance>()
@@ -93,36 +94,39 @@ export default function Main() {
   }, [nodes, appInstance])
 
   return (
-    <main className="w-screen h-screen" ref={appWrapper}>
-      <ReactFlow
-        nodes={nodes}
-        onNodesChange={onNodesChange}
-        edges={edges}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onInit={setAppInstance}
-        fitView
-        snapToGrid
-        fitViewOptions={fitViewOptions}
-        nodeTypes={nodeTypes}
-      >
-        <Panel
-          position="top-left"
-          className="text-black bg-white py-[4px] px-[8px] h-fit flex flex-col gap-[5px] text-[12px]"
+    <>
+      <Head title="Flowchat" />
+      <main className="w-screen h-screen" ref={appWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          onNodesChange={onNodesChange}
+          edges={edges}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={setAppInstance}
+          fitView
+          snapToGrid
+          fitViewOptions={fitViewOptions}
+          nodeTypes={nodeTypes}
         >
-          <p className="font-mono opacity-50">Shortcuts</p>
-          <div className="flex flex-col gap-[10px]">
-            <div className="flex items-center gap-[10px]">
-              <p className="font-medium">Create node</p>
-              <span className="bg-white px-[4px] border-black/10 rounded-lg text-black/50 border-[2px]">
-                n
-              </span>
+          <Panel
+            position="top-left"
+            className="text-black bg-white py-[4px] px-[8px] h-fit flex flex-col gap-[5px] text-[12px]"
+          >
+            <p className="font-mono opacity-50">Shortcuts</p>
+            <div className="flex flex-col gap-[10px]">
+              <div className="flex items-center gap-[10px]">
+                <p className="font-medium">Create node</p>
+                <span className="bg-white px-[4px] border-black/10 rounded-lg text-black/50 border-[2px]">
+                  n
+                </span>
+              </div>
             </div>
-          </div>
-        </Panel>
-        <Background />
-        <Controls />
-      </ReactFlow>
-    </main>
+          </Panel>
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </main>
+    </>
   )
 }
