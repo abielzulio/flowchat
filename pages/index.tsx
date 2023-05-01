@@ -85,18 +85,10 @@ export default function Main() {
       },
     }
     setNodes((nds) => nds.concat(newNode))
-    setCenter(
-      latestNode
-        ? latestNode.position.x + latestNode.width! / 3 + 150
-        : newNode.position.x + 150,
-      latestNode
-        ? latestNode.position.y + latestNode.height! + 100
-        : newNode.position.y + 100,
-      {
-        zoom: 2,
-        duration: 1000,
-      }
-    )
+    setCenter(newNode.position.x, newNode.position.y, {
+      zoom: 1.5,
+      duration: 1000,
+    })
   }, [nodes, appInstance])
 
   return (
