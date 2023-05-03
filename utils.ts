@@ -22,7 +22,6 @@ export const nodeChainTransformer = (
   while (currentNodes.length > 0) {
     const nextNodes = []
     for (const currentNode of currentNodes) {
-      const id = currentNode?.id
       const { question, answer } = currentNode?.data ?? {}
       if (answer !== undefined) {
         chain.push({
