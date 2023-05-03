@@ -160,7 +160,7 @@ const Chat = ({
           <p className="p-[12px] pb-[0px] opacity-50">{data.question}</p>
         )}
         {data.answer && data.answer.length > 0 && (
-          <p className="overflow-scroll px-[12px] pt-[12px]">{data.answer}</p>
+          <p className="overflow-scroll p-[12px]">{data.answer}</p>
         )}
       </div>
       <Handle
